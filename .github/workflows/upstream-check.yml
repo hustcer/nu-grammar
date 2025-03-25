@@ -46,12 +46,14 @@ jobs:
           git add .
           git checkout -b feature/upstream-update
           git commit -am 'Update upstream grammar syntax file'
-          git push origin feature/upstream-update -f
+          # The requested URL returned error: 403
+          # git push origin feature/upstream-update -f
+          git push -f https://hustcer:${{ secrets.PAT_TOKEN }}@github.com/hustcer/nu-grammar.git feature/upstream-update
           try {
             (
               gh pr create --base main
                 --head feature/upstream-update
-                --title 'Update upstream grammar syntax file'
+                --title 'CheckBot: Update upstream grammar syntax file'
                 --body 'This PR updates the upstream grammar syntax file to the latest revision.'
             )
           } catch {|err|
