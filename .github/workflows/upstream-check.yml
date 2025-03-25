@@ -14,6 +14,9 @@ on:
   schedule:
     - cron: '15 0 * * *' # run at 00:15 AM UTC
 
+permissions:
+  contents: write
+
 jobs:
   upstream-check:
     runs-on: ubuntu-latest
@@ -46,12 +49,14 @@ jobs:
           git add .
           git checkout -b feature/upstream-update
           git commit -am 'Update upstream grammar syntax file'
+          # Fix The requested URL returned error: 403
+          # Under the "Workflow permissions" section, select "Read and write permissions".
           git push origin feature/upstream-update -f
           try {
             (
               gh pr create --base main
                 --head feature/upstream-update
-                --title 'Update upstream grammar syntax file'
+                --title 'CheckBot: Update upstream grammar syntax file'
                 --body 'This PR updates the upstream grammar syntax file to the latest revision.'
             )
           } catch {|err|
